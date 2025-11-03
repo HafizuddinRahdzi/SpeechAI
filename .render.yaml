@@ -28,11 +28,11 @@ services:
       - key: DB_USERNAME
         fromDatabase:
           name: AISpeech
-          property: postgres
+          property: user
       - key: DB_PASSWORD
         fromDatabase:
           name: AISpeech
-          property: seremban123
+          property: password
 
 databases:
   - name: AISpeech
