@@ -23,10 +23,13 @@ class FeedbackController extends Controller
 
         // Identify missed or mispronounced words
         $missingWords = array_diff($expectedWords, $spokenWords);
-        $feedback = "Great job ". $request->student_name . " ! Based on your reading skills, your accuracy score is: {$accuracy}%.";
+        $feedback = "Great job ". $request->student_name . " ! Based on your reading skills, Your Accuracy Score is: {$accuracy}%. \n";
         //$feedback .= "Accuracy: {$accuracy}%. ";
+        // Include the recognized spoken words for display
+        $feedback .= "Recognized Speech:" . ucfirst($spoken) . "\n";
+
         if (count($missingWords) > 0) {
-            $feedback .= "You missed these words ". $request->student_name. " :" .implode(', ', array_slice($missingWords, 0, 10));
+            $feedback .= "You missed these words: " .implode(', ', array_slice($missingWords, 0, 10));
         } else {
             $feedback .= "You have successfully read everything correctly!";
         }

@@ -250,31 +250,40 @@
                 <span></span><span></span><span></span>
             </div>
 
-            <div id="ai-feedback" class="mt-3"></div>
+            <!-- The white-space rule ensures line breaks are rendered -->
+            <div id="ai-feedback" class="mt-3" style="white-space: pre-line;"></div>
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const aiTyping = document.getElementById('ai-typing');
                     const feedbackContainer = document.getElementById('ai-feedback');
-                    const fullText = `{!! strip_tags(session('success')) !!}`;
-                    const words = fullText.split(' ');
-                    let i = 0;
+
+                    // Fix: Use <br> for line breaks, not \n
+                    const fullText = `{!! nl2br(e(session('success'))) !!}`; 
+
+                    // Split by spaces but preserve <br> tags as HTML line breaks
+                    const words = fullText.split(/(\s+|<br\s*\/?>)/i);
 
                     setTimeout(() => {
-                        aiTyping.style.display = 'none'; // hide the "AI typing" animation
-                        feedbackContainer.innerHTML = ''; // clear before showing text
+                        aiTyping.style.display = 'none'; // hide typing dots
+                        feedbackContainer.innerHTML = ''; // clear before showing
 
                         words.forEach((word, index) => {
-                            const span = document.createElement('span');
-                            span.textContent = word + ' ';
-                            feedbackContainer.appendChild(span);
+                            if (word.match(/<br\s*\/?>/i)) {
+                                // Create an actual <br> element
+                                feedbackContainer.appendChild(document.createElement('br'));
+                            } else {
+                                const span = document.createElement('span');
+                                span.textContent = word;
+                                feedbackContainer.appendChild(span);
 
-                            // Delay for AI typing effect
-                            setTimeout(() => {
-                                span.style.color = 'black';
-                            }, index * 80); // adjust typing speed here
+                                // Delay for typing animation
+                                setTimeout(() => {
+                                    span.style.color = 'black';
+                                }, index * 80);
+                            }
                         });
-                    }, 2000); // delay before AI starts typing
+                    }, 2000);
                 });
             </script>
         </div>
